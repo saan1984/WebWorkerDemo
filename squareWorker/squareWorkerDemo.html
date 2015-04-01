@@ -1,0 +1,30 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Square Web Worker Demo</title>
+</head>
+<body>
+
+    <h1 id="resultContainer"></h1>
+    <input type="number" id="inputNumber" placeholder="Enter a number" value="5">
+    <button id="squareButton"> SQUARE</button>
+
+    <script>
+        var squareWorker = new Worker("doSquareWorker.js"),
+            resultContainer = document.getElementById("resultContainer"),
+            squareButton = document.getElementById("squareButton"),
+            inputNumber=document.getElementById("inputNumber");
+
+        squareButton.addEventListener("click",function(){
+            squareWorker.postMessage({number:inputNumber.value});
+        });
+
+        squareWorker.addEventListener("message",function(workerEvent){
+           var responseData = workerEvent.data,
+               squareResult= responseData.result;
+            resultContainer.innerText = squareResult;
+        });
+    </script>
+</body>
+</html>
