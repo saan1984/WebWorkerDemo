@@ -1,0 +1,34 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Time Web Worker Demo</title>
+</head>
+<body>
+
+<h1 id="resultContainer"></h1>
+<input type="number" id="number1" value="7" placeholder="Enter first number">
+<input type="number" id="number2" value="9" placeholder="Enter second number">
+<button id="greatButton">Find Greatest Number</button>
+
+<script>
+    var numberWorker = new Worker("numberWorker.js"),
+        resultContainer = document.getElementById("resultContainer"),
+        greatButton = document.getElementById("greatButton"),
+            number1 = document.getElementById("number1"),
+            number2=document.getElementById("number2");
+
+    greatButton.addEventListener("click",function(){
+        numberWorker.postMessage({
+            number1:parseInt(number1.value,10),
+            number2: parseInt(number2.value,10)
+        });
+    });
+
+    numberWorker.addEventListener("message",function(workerEvent){
+        var responseData = workerEvent.data;
+        resultContainer.innerText = "Greatest Number: "+responseData.result;
+    });
+</script>
+</body>
+</html>

@@ -1,0 +1,31 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Time Web Worker Demo</title>
+</head>
+<body>
+
+<h1 id="resultContainer"></h1>
+<button id="timeButton">Get Time</button>
+
+<script>
+    var dateWorker = new Worker("dateWorker.js"),
+        resultContainer = document.getElementById("resultContainer"),
+        timeButton = document.getElementById("timeButton");
+
+    timeButton.addEventListener("click",function(){
+        dateWorker.postMessage(null);
+    });
+
+    dateWorker.addEventListener("message",function(workerEvent){
+        var responseData = workerEvent.data,
+            hour = responseData.hour,
+            minute = responseData.minute,
+            second = responseData.second;
+        resultContainer.innerText = "HOUR: "+hour +
+        " MINUTE: "+minute +" SECOND: "+second;
+    });
+</script>
+</body>
+</html>
