@@ -1,0 +1,36 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Shared Web Worker Demo</title>
+</head>
+<body>
+<h1 id="resultContainer"></h1>
+<input type="text" id="inputString" value="Hello" placeholder="Enter a string">
+<button id="lengthButton">Get Length</button>
+<script>
+    var lengthWorker = new SharedWorker("calculateLengthWorker.js"),
+            resultContainer = document.getElementById("resultContainer"),
+            lengthButton = document.getElementById("lengthButton"),
+            inputString = document.getElementById("inputString");
+
+    lengthButton.addEventListener("click", function () {
+        resultContainer.innerText = "";
+        lengthWorker.port.postMessage({
+            string:inputString.value
+        });
+    });
+
+    //start the worker
+    lengthWorker.port.start();
+
+    //Success Handler for the worker
+    lengthWorker.port.addEventListener("message", function (workerEvent) {
+        var responseData = workerEvent.data,
+                result = responseData.result;
+        resultContainer.innerText = "Result: " + result;
+    });
+
+</script>
+</body>
+</html>
