@@ -1,0 +1,55 @@
+<!DOCTYPE html>
+<html>
+<head lang="en">
+    <meta charset="UTF-8">
+    <title>Web Worker Error Handler Demo</title>
+</head>
+<body>
+
+<h1 id="resultContainer"></h1>
+<input type="number" id="number1" value="-4" placeholder="Enter a number">
+<button id="squareResult">Square</button>
+
+<script id="squareWorker" type="javascript/worker">
+   self.addEventListener("message",function(event){
+        var requestData = event.data,
+            number1 = requestData.number1,
+            squareResult = 0;
+        if(number1>0) {
+             squareResult = number1 * number1
+             self.postMessage({result:squareResult});
+        } else{
+            //For negative number throw error
+            throw "It is a negative number.Please supply a positive number.";
+        }
+    });
+</script>
+
+<script>
+    var textContent = document.querySelector('#squareWorker').textContent,
+            workerBlob = new Blob([textContent]),
+            workerURL = window.URL.createObjectURL(workerBlob),
+            squareWorker = new Worker(workerURL),
+            resultContainer = document.getElementById("resultContainer"),
+            squareResult = document.getElementById("squareResult"),
+            number1 = document.getElementById("number1"),
+            number2 = document.getElementById("number2");
+
+    squareResult.addEventListener("click", function () {
+        squareWorker.postMessage({
+            number1:parseInt(number1.value,10)
+        });
+    });
+    //Success Handler for the worker
+    squareWorker.addEventListener("message", function (workerEvent) {
+        var responseData = workerEvent.data,
+                result = responseData.result;
+        resultContainer.innerText = "Result: " + result;
+    });
+    //Error Handler for the worker
+    squareWorker.addEventListener('error', function(workerErrorEvent){
+        resultContainer.innerText = "Error: " + workerErrorEvent.message;
+    }, false);
+</script>
+</body>
+</html>
