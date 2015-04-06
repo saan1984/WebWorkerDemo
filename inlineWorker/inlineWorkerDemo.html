@@ -5,12 +5,10 @@
     <title>Inline Web Worker Demo</title>
 </head>
 <body>
-
 <h1 id="resultContainer"></h1>
 <input type="number" id="number1" value="8" placeholder="Enter first number">
 <input type="number" id="number2" value="10" placeholder="Enter second number">
 <button id="multiplyButton">Multiply</button>
-
 <script id="multiplyWorker" type="javascript/worker">
    self.addEventListener("message",function(event){
         var requestData = event.data,
@@ -20,7 +18,6 @@
         self.postMessage({result:multiplyResult});
     });
 </script>
-
 <script>
     var textContent = document.querySelector('#multiplyWorker').textContent,
             workerBlob = new Blob([textContent]),
@@ -30,20 +27,17 @@
             multiplyButton = document.getElementById("multiplyButton"),
             number1 = document.getElementById("number1"),
             number2 = document.getElementById("number2");
-
     multiplyButton.addEventListener("click", function () {
         multiplyWorker.postMessage({
             number1:parseInt(number1.value,10),
             number2: parseInt(number2.value,10)
         });
     });
-
     multiplyWorker.addEventListener("message", function (workerEvent) {
         var responseData = workerEvent.data,
                 result = responseData.result;
         resultContainer.innerText = "Result: " + result;
     });
 </script>
-
 </body>
 </html>
