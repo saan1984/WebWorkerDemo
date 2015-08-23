@@ -5,7 +5,6 @@
     <title>Time Web Worker Demo</title>
 </head>
 <body>
-
 <h1 id="resultContainer"></h1>
 <button id="timeButton">Get Time</button>
 
@@ -17,7 +16,6 @@
     timeButton.addEventListener("click",function(){
         dateWorker.postMessage(null);
     });
-
     dateWorker.addEventListener("message",function(workerEvent){
         var responseData = workerEvent.data,
             hour = responseData.hour,
